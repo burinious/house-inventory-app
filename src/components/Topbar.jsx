@@ -1,69 +1,62 @@
-// src/components/Topbar.jsx
-import React from 'react';
+import React from "react";
 import {
-  AppBar, Toolbar, Typography, Button, Avatar,
-  Box, useMediaQuery, useTheme
-} from '@mui/material';
-import { signOut } from 'firebase/auth';
-import { useNavigate } from 'react-router-dom';
-import { auth } from '../firebase';
-import { toast } from 'react-toastify';
-import { useAuth } from '../context/AuthContext';
+  AppBar,
+  Box,
+  Toolbar,
+  Typography,
+  IconButton,
+  Avatar,
+  useTheme,
+  useMediaQuery
+} from "@mui/material";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBell } from "@fortawesome/free-solid-svg-icons";
+import { useAuth } from "../context/AuthContext";
 
 const Topbar = () => {
-  const navigate = useNavigate();
-  const { userData } = useAuth();
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-
-  const handleLogout = async () => {
-    try {
-      await signOut(auth);
-      toast.success("Successfully logged out!");
-      navigate('/');
-    } catch (error) {
-      toast.error("Logout failed!");
-    }
-  };
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const { userData } = useAuth();
 
   return (
-    <AppBar position="sticky" elevation={3} sx={{ backgroundColor: '#1976d2' }}>
-      <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+    <AppBar
+      position="fixed"
+      elevation={0}
+      sx={{
+        backdropFilter: "blur(14px)",
+        background: "rgba(255, 255, 255, 0.4)",
+        borderBottom: "1px solid rgba(255,255,255,0.2)",
+        zIndex: 1101,
+      }}
+    >
+      <Toolbar sx={{ justifyContent: "space-between", px: 2 }}>
+        {/* Left Section (Logo or Title) */}
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
           <Avatar
             src={userData?.logo || ""}
-            alt="Store Logo"
-            sx={{
-              width: 36, height: 36,
-              bgcolor: '#1565c0',
-              fontWeight: 'bold',
-              fontSize: 16
-            }}
+            alt={userData?.name || "User"}
+            sx={{ width: 40, height: 40 }}
           >
-            {userData?.name?.[0]?.toUpperCase() || 'U'}
+            {userData?.name?.[0]?.toUpperCase() || "U"}
           </Avatar>
-          <Typography variant={isMobile ? 'subtitle1' : 'h6'} fontWeight="bold" noWrap>
-            🏠 {userData?.name || 'House Inventory'}
-          </Typography>
+          {!isMobile && (
+            <Box>
+              <Typography variant="subtitle2" color="primary" fontWeight="bold">
+                {userData?.name || "User"}
+              </Typography>
+              <Typography variant="caption" color="text.secondary">
+                Welcome back!
+              </Typography>
+            </Box>
+          )}
         </Box>
 
-        <Button
-          variant="outlined"
-          color="inherit"
-          onClick={handleLogout}
-          size={isMobile ? 'small' : 'medium'}
-          sx={{
-            borderColor: '#fff',
-            color: '#fff',
-            fontWeight: 500,
-            '&:hover': {
-              backgroundColor: 'rgba(255,255,255,0.1)',
-              borderColor: '#fff',
-            },
-          }}
-        >
-          Logout
-        </Button>
+        {/* Right Section (Actions) */}
+        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+          <IconButton>
+            <FontAwesomeIcon icon={faBell} />
+          </IconButton>
+        </Box>
       </Toolbar>
     </AppBar>
   );

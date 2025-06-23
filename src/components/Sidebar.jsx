@@ -4,15 +4,11 @@ import {
   Drawer, List, ListItem, ListItemIcon, ListItemText, Typography,
   Divider, Box, IconButton, Button, useTheme, useMediaQuery
 } from "@mui/material";
-import DashboardIcon from "@mui/icons-material/SpaceDashboard";
-import AddBoxIcon from "@mui/icons-material/AddBox";
-import CategoryIcon from "@mui/icons-material/Category";
-import LogoutIcon from "@mui/icons-material/Logout";
-import MenuIcon from "@mui/icons-material/Menu";
-import CloseIcon from "@mui/icons-material/Close";
-import PersonIcon from "@mui/icons-material/Person";
-import ListAltIcon from "@mui/icons-material/ListAlt";
-import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
+import {
+  faChartPie, faPlus, faTags, faRightFromBracket, faBars,
+  faTimes, faUserEdit, faListCheck, faMoneyBillTrendUp
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const drawerWidth = 240;
 
@@ -23,73 +19,46 @@ const Sidebar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const handleLogout = () => {
-    // eslint-disable-next-line
     window.localStorage.clear();
-    // sign out logic (if needed)
     navigate("/");
   };
 
   const menuItems = [
-    { text: "Dashboard", icon: <DashboardIcon />, path: "/dashboard" },
-    { text: "Add Item", icon: <AddBoxIcon />, path: "/add" },
-    { text: "Manage Categories", icon: <CategoryIcon />, path: "/categories" },
-    { text: 'Add Transaction', icon: <MonetizationOnIcon />, path: '/add-transaction' },
+    { text: "Dashboard", icon: faChartPie, path: "/dashboard" },
+    { text: "Add Item", icon: faPlus, path: "/add" },
+    { text: "Manage Categories", icon: faTags, path: "/categories" },
+    { text: "Add Transaction", icon: faMoneyBillTrendUp, path: "/add-transaction" },
+    { text: "Edit Profile", icon: faUserEdit, path: "/edit-profile" },
+    { text: "Transactions", icon: faListCheck, path: "/transactions" },
   ];
 
-  const drawer = (
-    <Box sx={{
-      height: "100%",
-      display: "flex",
-      flexDirection: "column",
-      background: "linear-gradient(135deg,#1976d2 80%,#42a5f5 100%)",
-      boxShadow: 2,
-    }}>
-      {/* Header */}
-      <Box sx={{
-        p: 2,
-        pl: 3,
-        pr: 3,
-        minHeight: 68,
+  const drawerContent = (
+    <Box
+      sx={{
+        height: "100%",
         display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        borderBottom: "1px solid rgba(255,255,255,0.1)"
-      }}>
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-          <Box
-            sx={{
-              width: 36,
-              height: 36,
-              borderRadius: "50%",
-              background: "rgba(255,255,255,0.18)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              mr: 1,
-            }}
-          >
-            <span style={{ fontSize: 24, color: "#fff" }}>🏠</span>
-          </Box>
-          <Typography
-            variant="h6"
-            fontWeight="bold"
-            sx={{
-              color: "#fff",
-              fontFamily: "Montserrat, sans-serif",
-              letterSpacing: 1,
-              fontSize: 22
-            }}
-            noWrap
-          >
-            Inventory
-          </Typography>
-        </Box>
+        flexDirection: "column",
+        backdropFilter: "blur(14px)",
+        background: "rgba(25, 118, 210, 0.75)",
+        borderRight: "1px solid rgba(255,255,255,0.1)",
+      }}
+    >
+      <Box
+        sx={{
+          p: 3,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          borderBottom: "1px solid rgba(255,255,255,0.1)"
+        }}
+      >
+        <Typography variant="h6" fontWeight="bold" color="white" noWrap>
+          <FontAwesomeIcon icon={faChartPie} style={{ marginRight: 8 }} />
+          Inventory
+        </Typography>
         {isMobile && (
-          <IconButton
-            onClick={() => setMobileOpen(false)}
-            sx={{ color: "white", ml: 1 }}
-          >
-            <CloseIcon />
+          <IconButton onClick={() => setMobileOpen(false)} sx={{ color: "#fff" }}>
+            <FontAwesomeIcon icon={faTimes} />
           </IconButton>
         )}
       </Box>
@@ -104,67 +73,34 @@ const Sidebar = () => {
             to={item.path}
             onClick={() => isMobile && setMobileOpen(false)}
             sx={{
-              borderRadius: 2,
               mx: 1,
               my: 0.5,
+              borderRadius: 2,
               color: "#fff",
               "&.active, &:hover": {
-                background: "rgba(255,255,255,0.12)",
-                color: "#fff",
-              },
-              transition: "background 0.2s",
-              fontWeight: "bold",
+                backgroundColor: "rgba(255,255,255,0.12)",
+              }
             }}
           >
-            <ListItemIcon sx={{ color: "#fff", minWidth: 40 }}>{item.icon}</ListItemIcon>
-            <ListItemText primary={item.text} primaryTypographyProps={{ fontWeight: "bold", fontSize: 16 }} />
+            <ListItemIcon sx={{ color: "#fff", minWidth: 40 }}>
+              <FontAwesomeIcon icon={item.icon} />
+            </ListItemIcon>
+            <ListItemText primary={item.text} />
           </ListItem>
         ))}
-
-        <ListItem
-          component={NavLink}
-          to="/edit-profile"
-          onClick={() => isMobile && setMobileOpen(false)}
-          sx={{
-            borderRadius: 2, mx: 1, my: 0.5,
-            "&.active, &:hover": { backgroundColor: "rgba(255,255,255,0.10)" }
-          }}
-        >
-          <ListItemIcon sx={{ color: "#fff", minWidth: 40 }}>
-            <PersonIcon />
-          </ListItemIcon>
-          <ListItemText primary="Edit Profile" />
-        </ListItem>
-
-        <ListItem
-          component={NavLink}
-          to="/transactions"
-          onClick={() => isMobile && setMobileOpen(false)}
-          sx={{
-            borderRadius: 2, mx: 1, my: 0.5,
-            "&.active, &:hover": { backgroundColor: "rgba(255,255,255,0.10)" }
-          }}
-        >
-          <ListItemIcon sx={{ color: "#fff", minWidth: 40 }}>
-            <ListAltIcon />
-          </ListItemIcon>
-          <ListItemText primary="Transactions" />
-        </ListItem>
       </List>
 
-      <Box sx={{ p: 2, pb: 3 }}>
+      <Box sx={{ p: 2 }}>
         <Button
-          variant="outlined"
           fullWidth
-          startIcon={<LogoutIcon />}
+          variant="outlined"
+          startIcon={<FontAwesomeIcon icon={faRightFromBracket} />}
           onClick={handleLogout}
           sx={{
             color: "#fff",
             borderColor: "#fff",
-            fontWeight: "bold",
             "&:hover": {
-              backgroundColor: "rgba(255,255,255,0.14)",
-              borderColor: "#fff"
+              backgroundColor: "rgba(255,255,255,0.1)"
             }
           }}
         >
@@ -176,25 +112,23 @@ const Sidebar = () => {
 
   return (
     <>
-      {/* Hamburger Menu for Mobile */}
       {isMobile && !mobileOpen && (
         <IconButton
           onClick={() => setMobileOpen(true)}
           sx={{
             position: "fixed",
-            top: 18,
+            top: 16,
             left: 16,
-            zIndex: 2001,
+            zIndex: 2000,
             backgroundColor: "#1976d2",
             color: "white",
             borderRadius: "50%",
-            boxShadow: 2,
-            "&:hover": { backgroundColor: "#1565c0" },
-            width: 44,
-            height: 44
+            width: 46,
+            height: 46,
+            boxShadow: 2
           }}
         >
-          <MenuIcon />
+          <FontAwesomeIcon icon={faBars} />
         </IconButton>
       )}
 
@@ -202,22 +136,18 @@ const Sidebar = () => {
         variant={isMobile ? "temporary" : "permanent"}
         open={isMobile ? mobileOpen : true}
         onClose={() => setMobileOpen(false)}
-        ModalProps={{ keepMounted: true }}
         sx={{
           width: drawerWidth,
           flexShrink: 0,
-          zIndex: isMobile ? 2002 : 1200,
           "& .MuiDrawer-paper": {
             width: drawerWidth,
-            boxSizing: "border-box",
-            background: "linear-gradient(135deg,#1976d2 80%,#42a5f5 100%)",
-            color: "#fff",
-            border: 0,
-            transition: "all .15s"
-          },
+            backgroundColor: "transparent",
+            boxShadow: "none",
+            border: 0
+          }
         }}
       >
-        {drawer}
+        {drawerContent}
       </Drawer>
     </>
   );
